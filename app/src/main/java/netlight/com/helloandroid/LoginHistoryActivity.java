@@ -59,13 +59,6 @@ public class LoginHistoryActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_login_history_acticity, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		int viewId = v.getId();
 		if (viewId == _btnSignOut.getId()) {
