@@ -32,7 +32,6 @@ public class LoginHistoryActivity extends Activity implements OnClickListener {
 		_loginList = (ListView) findViewById(R.id.login_list);
 
 		_dao = new DAO(this);
-		_dao.open();
 		_dao.addLogin(_user.getId());
 		
 		String[] values = _dao.getFiveLatestLogins(_user.getId());

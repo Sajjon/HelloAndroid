@@ -33,8 +33,6 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_sign_up);
 
 		_dao = new DAO(this);
-		_dao.open();
-
 		_btnSignUp = (Button) findViewById(R.id.sign_up_button);
 		_editTextMail = (EditText) findViewById(R.id.sign_up_email);
 		_editTextPassword = (EditText) findViewById(R.id.sign_up_password);

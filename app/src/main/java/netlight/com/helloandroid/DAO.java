@@ -6,184 +6,104 @@ package netlight.com.helloandroid;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
+
+
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 public class DAO {
 
 	// Database fields
-	private SQLiteDatabase database;
-	private MySQLiteHelper dbHelper;
+    private DatabaseHelper _databaseHelper;
+    private RuntimeExceptionDao<User, Integer> _userDao;
+    private RuntimeExceptionDao<LoginEntry, Integer> _loginEntryDao;
+
 
 	public DAO(Context context) {
-		dbHelper = new MySQLiteHelper(context);
-	}
-
-	public void open() {
-		if (dbHelper != null) {
-			try {
-				database = dbHelper.getWritableDatabase();
-			} catch (SQLException e) {
-				System.err.println("DAO: error while opening database");
-			}
-		}
+        _databaseHelper = new DatabaseHelper(context);
+        _userDao = _databaseHelper.getUserDao();
+        _loginEntryDao = _databaseHelper.getLoginEntryDao();
 	}
 
 	public void close() {
-		if (dbHelper != null) {
-			dbHelper.close();
+		if (_databaseHelper != null) {
+            _databaseHelper.close();
 		}
 	}
 
 	public void addLogin(long userId) {
-
-		ContentValues values = new ContentValues();
-
-		/* Insert values in database */
-		values.put(MySQLiteHelper.TABLE_LOGINS_COLUMN_USER_ID, userId);
-
-		long unixTimestamp = System.currentTimeMillis() / 1000L;
-		values.put(MySQLiteHelper.TABLE_LOGINS_COLUMN_TIMESTAMP, unixTimestamp);
-
-		database.insert(MySQLiteHelper.TABLE_LOGINS, null, values);
+        LoginEntry newLoginEntry = new LoginEntry(userId);
+        _loginEntryDao.create(newLoginEntry);
 	}
 
 	public User createUser(String email, String password) {
 		String hashedPassword = PasswordEncrypter.encrypt(password);
-		if (hashedPassword == null) {
+
+        if (hashedPassword == null) {
 			System.err.println("Could not hash password");
 			return null;
 		}
 
-		ContentValues values = new ContentValues();
-
-		/* Insert values in database */
-		values.put(MySQLiteHelper.TABLE_USERS_COLUMN_EMAIL, email);
-		values.put(MySQLiteHelper.TABLE_USERS_COLUMN_PASSWORD, hashedPassword);
-
-		long insertId = database.insert(MySQLiteHelper.TABLE_USERS, null, values);
-		String idColumn = String.format("%s=%d", MySQLiteHelper.TABLE_USERS_COLUMN_ID, insertId);
-		Cursor cursor = database.query(MySQLiteHelper.TABLE_USERS, null, idColumn, null, null, null, null);
-		cursor.moveToFirst();
-		User newUser = cursorToUser(cursor);
-		cursor.close();
+		User newUser = new User(email, hashedPassword);
+        _userDao.create(newUser);
 		return newUser;
 	}
-	
-	public String[] getLoginsCopy(long id) {
-		ArrayList<String> logins = new ArrayList<String>();
-		String loginQuery = String.format("SELECT * FROM %s WHERE %s=?", MySQLiteHelper.TABLE_LOGINS, MySQLiteHelper.TABLE_LOGINS_COLUMN_ID);
-		String idString = "" + id;
-		Cursor cursor = database.rawQuery(loginQuery, new String[] { idString });
-		cursor.moveToLast();
-		if (cursor != null) {
-			while (!cursor.isBeforeFirst()) {
-				long unixTimeStamp = cursor.getLong(2);
-				Date time = new java.util.Date((long) unixTimeStamp * 1000);
-				String date = time.toString();
-				logins.add(date);
-				cursor.moveToPrevious();
-			}
-		}
 
-		cursor.close();
+	public String[] getFiveLatestLogins(long userId) {
+        HashMap fieldValuesMap = new HashMap();
+        fieldValuesMap.put("userId", userId);
+        ArrayList<LoginEntry> entryList = new ArrayList<LoginEntry>(_loginEntryDao.queryForFieldValues(fieldValuesMap));
 
 		/* Invert */
-		String[] loginsArray = new String[logins.size()];
+        int size = 5;
+		String[] loginsArray = new String[size];
 		int j = 0;
-		for (int i = logins.size(); i > 0; --i) {
-			loginsArray[j] = logins.get(i - 1);
-			j++;
-		}
-
-		return loginsArray;
-	}
-
-	public String[] getFiveLatestLogins(long id) {
-		ArrayList<String> logins = new ArrayList<String>();
-
-		String loginQuery = String.format("SELECT * FROM %s WHERE %s=?", MySQLiteHelper.TABLE_LOGINS, MySQLiteHelper.TABLE_LOGINS_COLUMN_USER_ID);
-		String idString = "" + id;
-		Cursor cursor = database.rawQuery(loginQuery, new String[] { idString });
-		cursor.moveToLast();
-		int rows = 0;
-		if (cursor != null) {
-			while (!cursor.isBeforeFirst()) {
-				long unixTimeStamp = cursor.getLong(2);
-				Date time = new java.util.Date((long) unixTimeStamp * 1000);
-				String date = time.toString();
-				logins.add(date);
-				rows++;
-				if (rows == 5) {
-					break;
-				}
-				cursor.moveToPrevious();
-			}
-		}
-
-		cursor.close();
-
-		/* Invert */
-		String[] loginsArray = new String[logins.size()];
-		int j = 0;
-		for (int i = logins.size(); i > 0; --i) {
-			loginsArray[j] = logins.get(i - 1);
-			j++;
+		for (int i = entryList.size() - 1; i >= 0; --i) {
+            LoginEntry loginEntry = entryList.get(i);
+            String date = loginEntry.getDate().toString();
+            loginsArray[j] = date;
+            ++j;
+            if (j >= size) { // We only want the five latest
+                break;
+            }
 		}
 
 		return loginsArray;
 	}
 
 	public void deleteUser(User user) {
-		long id = user.getId();
-		System.out.printf("Deleted user with id: %d\n", id);
-		String idColumn = String.format("%s=%d", MySQLiteHelper.TABLE_USERS_COLUMN_ID, id);
-		database.delete(MySQLiteHelper.TABLE_USERS, idColumn, null);
+        _userDao.delete(user);
 	}
 
 	public List<User> getAllUsers() {
-		List<User> users = new ArrayList<User>();
-
-		Cursor cursor = database.query(MySQLiteHelper.TABLE_USERS, null, null, null, null, null, null);
-
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			User user = cursorToUser(cursor);
-			users.add(user);
-			cursor.moveToNext();
-		}
-		// Make sure to close the cursor
-		cursor.close();
+		List<User> users = _userDao.queryForAll();
 		return users;
 	}
 
 	public int getSize() {
-		Cursor cursor = database.query(MySQLiteHelper.TABLE_USERS, null, null, null, null, null, null);
-		return cursor.getCount();
+		int size = 0;
+        List<User> users = getAllUsers();
+        if (users != null) {
+            size = getAllUsers().size();
+        }
+        return size;
 	}
 
 	public void clearDB() {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		db.delete(MySQLiteHelper.TABLE_LOGINS, null, null);
-		db.delete(MySQLiteHelper.TABLE_USERS, null, null);
+		_databaseHelper.clearDatabase();
 	}
 
 	public boolean emailExistsInTable(String email) {
-		String loginQuery = String.format("SELECT * FROM %s WHERE %s=?", MySQLiteHelper.TABLE_USERS, MySQLiteHelper.TABLE_USERS_COLUMN_EMAIL);
-		Cursor cursor = database.rawQuery(loginQuery, new String[] { email });
-		if (cursor != null) {
-			if (cursor.getCount() > 0) {
-				cursor.close();
-				return true;
-			}
-		}
-		cursor.close();
-		return false;
+        HashMap fieldValuesMap = new HashMap();
+        fieldValuesMap.put("email", email);
+        List userList = _userDao.queryForFieldValues(fieldValuesMap);
+        boolean found = userList != null && userList.size() > 0; // should be 1 really, not more than 1.
+		return found;
 	}
 
 	public User login(String email, String password) {
@@ -193,29 +113,16 @@ public class DAO {
 			System.err.println("Could not hash password");
 			return null;
 		}
-		String loginQuery = String.format("SELECT * FROM %s WHERE %s=? AND %s=?", MySQLiteHelper.TABLE_USERS, MySQLiteHelper.TABLE_USERS_COLUMN_EMAIL,
-				MySQLiteHelper.TABLE_USERS_COLUMN_PASSWORD);
-		Cursor cursor = database.rawQuery(loginQuery, new String[] { email, hashedPassword });
-		if (cursor != null) {
-			if (cursor.getCount() > 0) {
-				user = cursorToUser(cursor);
-			}
-		}
-		cursor.close();
+
+        HashMap fieldValuesMap = new HashMap();
+        fieldValuesMap.put("email", email);
+        fieldValuesMap.put("password", hashedPassword);
+        List userList = _userDao.queryForFieldValues(fieldValuesMap);
+        if (userList != null) {
+            user = (User) userList.get(0);
+        }
 
 		return user;
 	}
 
-	private User cursorToUser(Cursor cursor) {
-		User user = new User();
-		cursor.moveToFirst();
-		long id = cursor.getLong(0);
-		String email = cursor.getString(1);
-		String password = cursor.getString(2);
-
-		user.setId(id);
-		user.setEmail(email);
-		user.setPassword(password);
-		return user;
-	}
 }

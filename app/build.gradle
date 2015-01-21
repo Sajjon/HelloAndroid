@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "netlight.com.helloandroid"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -22,5 +22,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'commons-codec:commons-codec:1.10'
-
+    compile 'com.j256.ormlite:ormlite-android:4.46'
 }

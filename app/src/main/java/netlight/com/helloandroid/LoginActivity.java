@@ -82,14 +82,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		_btnClearDB.setOnClickListener(this);
 
 		_dao = new DAO(this);
-		_dao.open();
 
 		int rowsInUserDB = _dao.getSize();
 
 		_rowsInDBView = (TextView) findViewById(R.id.rows_in_db);
 		_rowsInDBView.setText("" + rowsInUserDB);
 
-		Log.e("LoginActivity", "Size of database: " + _dao.getSize());
+		Log.i("LoginActivity", "Size of database: " + rowsInUserDB);
 	}
 
 	@Override
