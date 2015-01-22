@@ -60,7 +60,7 @@ public class DAO {
         ArrayList<LoginEntry> entryList = new ArrayList<LoginEntry>(_loginEntryDao.queryForFieldValues(fieldValuesMap));
 
 		/* Invert */
-        int size = 5;
+        int size = Math.min(5, entryList.size());
 		String[] loginsArray = new String[size];
 		int j = 0;
 		for (int i = entryList.size() - 1; i >= 0; --i) {
