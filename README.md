@@ -36,8 +36,8 @@ Your task is to anonymize our service and not give so informative feedback. You 
 
 # ADVANCED Tasks
 1. When Signed in and when the LoginHistoryActivity is presented the email address is being shown. It would be nicer to show your name. Add two new fields to the sign up page
-  *Firstname
-  *Lastname
+  * Firstname
+  * Lastname
 (TIP: create/declare those views in the Layout file, and then retrieve them in the Activity using findViewById (in the onCreate method) so that you can interact with them programmatically)
 You need to modify the User class, adding the two new fields. You also need to change the two Parcelable methods in the bottom.
 
