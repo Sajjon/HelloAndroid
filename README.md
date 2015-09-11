@@ -23,9 +23,9 @@ Your activity class can retrieve the (sub)views/widgets (such as buttons and lab
 
 YOUR MISSION - Improve this app!
 
-TASKS:
-1. When signing up the user only needs to input the password field once
 
+
+1. When signing up the user only needs to input the password field once
 2. Change colors of the background and or buttons. You can do this in three different ways, of which two relates to each other.
 ..1. Programmatically, with Java code in the activity <---- NOT RECOMMENDED
 ..2. In the layout file
