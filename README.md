@@ -1,4 +1,5 @@
-# HelloAndroid Tutorial for Android development
+# HelloAndroid 
+## Tutorial for Android development
 
 Simple Sign-up, Sign-in application using a local Database to which we are performing write and read operations using an ORM layer. ORM stands for Object-Relational Mapping and it is a technique which removes the need to write SQL (database) code. The ORM tool does that for us. This app uses an ORM called ORMLite which is sort of industry standard for Android, although it is a open source third party tool (i.e. Google has not developed themselves).
 
@@ -21,7 +22,7 @@ Your activity class can retrieve the (sub)views/widgets (such as buttons and lab
 
 YOUR MISSION - Improve this app!
 
-# Suggested Basic Tasks
+# Basic Tasks
 1. When signing up the user only needs to input the password field once
 2. Change colors of the background and or buttons. You can do this in three different ways, of which two relates to each other.
   1. Programmatically, with Java code in the activity <---- NOT RECOMMENDED
@@ -33,7 +34,7 @@ YOUR MISSION - Improve this app!
 
 Your task is to anonymize our service and not give so informative feedback. You will do this by not using the specific error messages about email or password at all. The error messages are being presented by using the method on the input fields (of class EditText) called "setError". We don't want to use this at all. Instead let's create a new UI element of type TextView, which is used to present text. Set the text of this TextView to some generic error message, that does not reveal information whether the email or the password was wrong. Set the "visibility" of this element to "gone" and set it to "visible" when you want to show the error message.
 
-# ADVANCED tasks
+# ADVANCED Tasks
 1. When Signed in and when the LoginHistoryActivity is presented the email address is being shown. It would be nicer to show your name. Add two new fields to the sign up page
   *Firstname
   *Lastname
