@@ -23,7 +23,7 @@ Your activity class can retrieve the (sub)views/widgets (such as buttons and lab
 YOUR MISSION - Improve this app!
 
 # Basic Tasks
-1. When signing up the user only needs to input the password field once
+1. During sign up, the user has to confirm her password, thus having to enter it twice. Sure is safer and all, but a bit tiresome. The "new trend" seams to be to only use one password field. Your task is to remove the confirmatin field so tha the user only has to enter the password once.
 2. Change colors of the background and or buttons. You can do this in three different ways, of which two relates to each other.
   1. Programmatically, with Java code in the activity <---- NOT RECOMMENDED
   2. In the layout file
