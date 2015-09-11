@@ -27,10 +27,8 @@ YOUR MISSION - Improve this app!
 
 1. When signing up the user only needs to input the password field once
 2. Change colors of the background and or buttons. You can do this in three different ways, of which two relates to each other.
-..1. Programmatically, with Java code in the activity <---- NOT RECOMMENDED
-..2. In the layout file
-....1. Using the "Text" tab, showing "RAW" XML <---- RECOMMENDED (but old school)
-....2. Using the Design tab <---- NOT RECOMMENDED
+.. 1. Programmatically, with Java code in the activity <---- NOT RECOMMENDED
+.. 2. In the layout file
 
 3. In the LoginActivity, if the user tries to login with an email address that does not exist in the database, the error message "No user with that email" is being presented as an error on the email "field". This is a very informative message for the user, so that she knows that it was the email she entered that was incorrect and not the password that was incorrectly typed. However, by showing this message any user can type in any email and will get feedback from our app whether that user has an account at this service or not. Oh no! This is not good!
 
