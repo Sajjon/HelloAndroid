@@ -39,7 +39,6 @@ Your task is to anonymize our service and not give so informative feedback. You 
   * Firstname
   * Lastname
 
-##TIP 
 Create/declare those views in the Layout file, and then retrieve them in the Activity using findViewById (in the onCreate method) so that you can interact with them programmatically. You need to modify the User class, adding the two new fields. You also need to change the two Parcelable methods in the bottom.
 
 2. Validate the email address during signup and signin. Right now it is possible to signup with invalid email addresses. Oh oh, not good! There are lot's of different email validation code in Java on Github and StackOverlow. When the user enters text in the EditText email field, validate the changed text (either for every keystroke or just when pressing the SignIn or SignUp button), and give the user some graphical feedback to let her know that the email validates.
