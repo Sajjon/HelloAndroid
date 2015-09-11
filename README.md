@@ -25,18 +25,19 @@ YOUR MISSION - Improve this app!
 
 TASKS:
 1. When signing up the user only needs to input the password field once
+
 2. Change colors of the background and or buttons. You can do this in three different ways, of which two relates to each other.
 ..1. Programmatically, with Java code in the activity <---- NOT RECOMMENDED
 ..2. In the layout file
 ....1. Using the "Text" tab, showing "RAW" XML <---- RECOMMENDED (but old school)
 ....2. Using the Design tab <---- NOT RECOMMENDED
 
-2) In the LoginActivity, if the user tries to login with an email address that does not exist in the database, the error message "No user with that email" is being presented as an error on the email "field". This is a very informative message for the user, so that she knows that it was the email she entered that was incorrect and not the password that was incorrectly typed. However, by showing this message any user can type in any email and will get feedback from our app whether that user has an account at this service or not. Oh no! This is not good!
+3. In the LoginActivity, if the user tries to login with an email address that does not exist in the database, the error message "No user with that email" is being presented as an error on the email "field". This is a very informative message for the user, so that she knows that it was the email she entered that was incorrect and not the password that was incorrectly typed. However, by showing this message any user can type in any email and will get feedback from our app whether that user has an account at this service or not. Oh no! This is not good!
 
 Your task is to anonymize our service and not give so informative feedback. You will do this by not using the specific error messages about email or password at all. The error messages are being presented by using the method on the input fields (of class EditText) called "setError". We don't want to use this at all. Instead let's create a new UI element of type TextView, which is used to present text. Set the text of this TextView to some generic error message, that does not reveal information whether the email or the password was wrong. Set the "visibility" of this element to "gone" and set it to "visible" when you want to show the error message.
 
 ADVANCED
-1) When Signed in and when the LoginHistoryActivity is presented the email address is being shown. It would be nicer to show your name.
+When Signed in and when the LoginHistoryActivity is presented the email address is being shown. It would be nicer to show your name.
 Add two new fields to the sign up page
 Firstname
 Lastname
